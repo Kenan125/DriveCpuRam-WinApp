@@ -2,6 +2,9 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DriveCpuRam_WinApp
 {
@@ -19,7 +22,7 @@ namespace DriveCpuRam_WinApp
         {
             try
             {
-                // Get Cpu Data
+            // Get Cpu Data
                 CpuInfoEntity cpuInfoEntity = new CpuInfoEntity()
                 {
                     CpuName = CpuInfo.GetCpuName(),
@@ -27,7 +30,7 @@ namespace DriveCpuRam_WinApp
                     CpuUsage = CpuInfo.GetCpuUsage()
                 };
 
-                // Get Ram Data
+            // Get Ram Data
                 RamInfoEntity ramInfoEntity = new RamInfoEntity()
                 {
                     RamAvailable = (float)Math.Round(RamInfo.GetAvailableRam(), 2),
@@ -37,11 +40,11 @@ namespace DriveCpuRam_WinApp
                 };
 
                 // Get Drive Data
-                List<object[]> driveInfos = DriveInfoProvider.GetDriveInfo();
+            List<object[]> driveInfos = DriveInfoProvider.GetDriveInfo();
 
                 using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
+            {
+                connection.Open();
 
                     InsertCpuInfo(cpuInfoEntity, connection);
                     InsertRamInfo(ramInfoEntity, connection);
@@ -58,44 +61,44 @@ namespace DriveCpuRam_WinApp
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
-
+                
         private void InsertCpuInfo(CpuInfoEntity cpuInfoEntity, SqlConnection connection)
         {
             string sqlCpu = "INSERT INTO CpuInfo (CpuName, CpuCoreNumber, UsedCpuPercentage, Email) VALUES (@CpuName, @CpuCoreNumber, @UsedCpuPercentage, @Email)";
 
-            using (SqlCommand command = new SqlCommand(sqlCpu, connection))
-            {
+                using (SqlCommand command = new SqlCommand(sqlCpu, connection))
+                {
                 command.Parameters.AddWithValue("@CpuName", cpuInfoEntity.CpuName);
                 command.Parameters.AddWithValue("@CpuCoreNumber", cpuInfoEntity.CpuCore);
                 command.Parameters.AddWithValue("@UsedCpuPercentage", cpuInfoEntity.CpuUsage);
                 command.Parameters.AddWithValue("@Email", _email);
 
-                command.ExecuteNonQuery();
-            }
+                    command.ExecuteNonQuery();
+                }
         }
 
         private void InsertRamInfo(RamInfoEntity ramInfoEntity, SqlConnection connection)
         {
             string sqlRam = "INSERT INTO RamInfo (TotalMemory, AvailableMemory, UsedMemory, UsagePercentage, Email) VALUES (@TotalMemory, @AvailableMemory, @UsedMemory, @UsagePercentage, @Email)";
 
-            using (SqlCommand command = new SqlCommand(sqlRam, connection))
-            {
+                using (SqlCommand command = new SqlCommand(sqlRam, connection))
+                {
                 command.Parameters.AddWithValue("@TotalMemory", (decimal)ramInfoEntity.RamTotal);
                 command.Parameters.AddWithValue("@AvailableMemory", (decimal)ramInfoEntity.RamAvailable);
                 command.Parameters.AddWithValue("@UsedMemory", (decimal)ramInfoEntity.RamUsed);
                 command.Parameters.AddWithValue("@UsagePercentage", (decimal)ramInfoEntity.RamPercentage);
                 command.Parameters.AddWithValue("@Email", _email);
 
-                command.ExecuteNonQuery();
-            }
+                    command.ExecuteNonQuery();
+                }
         }
 
         private void InsertDriveInfo(List<object[]> driveInfos, SqlConnection connection)
         {
             string query = "INSERT INTO DriveInfo (DriveName, TotalSpaceGB, AvailableSpaceGB, UsedSpaceGB, UsedPercentage, Email) VALUES (@DriveName, @TotalSpaceGB, @AvailableSpaceGB, @UsedSpaceGB, @UsedPercentage, @Email)";
 
-            foreach (var driveInfo in driveInfos)
-            {
+                foreach (var driveInfo in driveInfos)
+                {
                 DriveInfoEntity driveInfoEntity = new DriveInfoEntity()
                 {
                     DriveName = driveInfo[0].ToString(),
@@ -105,8 +108,8 @@ namespace DriveCpuRam_WinApp
                     UsedPercentage = decimal.Parse(driveInfo[4].ToString()),
                 };
 
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
                     command.Parameters.AddWithValue("@DriveName", driveInfoEntity.DriveName);
                     command.Parameters.AddWithValue("@TotalSpaceGB", driveInfoEntity.TotalSpaceGB);
                     command.Parameters.AddWithValue("@AvailableSpaceGB", driveInfoEntity.AvailableSpaceGB);
@@ -114,8 +117,8 @@ namespace DriveCpuRam_WinApp
                     command.Parameters.AddWithValue("@UsedPercentage", driveInfoEntity.UsedPercentage);
                     command.Parameters.AddWithValue("@Email", _email);
 
-                    command.ExecuteNonQuery();
-                }
+                        command.ExecuteNonQuery();
+                    }
             }
         }
 
@@ -143,7 +146,7 @@ namespace DriveCpuRam_WinApp
             UpdateUserId("CpuInfo", userId, connection);
             UpdateUserId("RamInfo", userId, connection);
             UpdateUserId("DriveInfo", userId, connection);
-        }
+                }
 
         private void UpdateUserId(string tableName, int userId, SqlConnection connection)
         {
