@@ -1,8 +1,3 @@
-using Microsoft.Data.SqlClient;
-using System;
-using System.IO;
-
-
 namespace DriveCpuRam_WinApp
 {
     internal static class Program
@@ -22,13 +17,13 @@ namespace DriveCpuRam_WinApp
             Application.Run(new Form1());
 
 
-            
 
 
-            
 
-           
+
+
+
         }
-       
+
     }
 }

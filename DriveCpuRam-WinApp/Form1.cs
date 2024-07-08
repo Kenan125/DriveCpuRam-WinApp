@@ -105,6 +105,8 @@ namespace DriveCpuRam_WinApp
 
                 // Show a success message
                 MessageBox.Show("Account created successfully!");
+                SqlDataSender sqlDataSender = new SqlDataSender(email);
+                sqlDataSender.SendInfoToSql();
                 panel1.Visible = false;
                 panel2.Visible = true;
             }
@@ -127,8 +129,10 @@ namespace DriveCpuRam_WinApp
                 MessageBox.Show("Login successful!");
 
                 // You can add your logic to retrieve UserId if needed
-                SqlDataSender sqlDataSender = new SqlDataSender(email);
-                sqlDataSender.SendInfoToSql();
+                /*SqlDataSender sqlDataSender = new SqlDataSender(email);
+                sqlDataSender.SendInfoToSql();*/
+                SqlDataUpdater sqlUpdater = new SqlDataUpdater(email);
+                sqlUpdater.UpdateLogin();
 
                 panel3.Visible = false;
                 panel2.Visible = false;

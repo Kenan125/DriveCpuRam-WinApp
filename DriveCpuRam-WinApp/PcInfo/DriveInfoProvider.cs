@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-
-
-namespace DriveCpuRam_WinApp
+﻿namespace DriveCpuRam_WinApp.PcInfo
 {
     public class DriveInfoProvider
     {
@@ -25,7 +17,7 @@ namespace DriveCpuRam_WinApp
                     double totalSpace = drive.TotalSize / 1024.0 / 1024 / 1024; // Convert to GB
                     double availableSpace = drive.AvailableFreeSpace / 1024.0 / 1024 / 1024; // Convert to GB
                     double usedSpace = totalSpace - availableSpace;
-                    double percentage = (usedSpace / totalSpace) * 100; ;
+                    double percentage = usedSpace / totalSpace * 100; ;
 
                     object[] driveInfo = new object[] { driveName, totalSpace, availableSpace, usedSpace, percentage };
                     driveInfos.Add(driveInfo);
@@ -35,20 +27,20 @@ namespace DriveCpuRam_WinApp
                     driveInfos[i] = null;
                 }
 
-                
+
             }
 
 
 
             return driveInfos;
 
-            
+
 
 
 
         }
 
-        
+
     }
 }
 

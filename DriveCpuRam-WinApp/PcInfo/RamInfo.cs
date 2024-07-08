@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Management;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DriveCpuRam_WinApp
+namespace DriveCpuRam_WinApp.PcInfo
 {
     public class RamInfo
     {
@@ -18,8 +13,8 @@ namespace DriveCpuRam_WinApp
             {
                 totalRam += (decimal)Convert.ToDouble(obj["Capacity"]);
             }
-            return Math.Round(FormatBytes((decimal)totalRam),0);
-            
+            return Math.Round(FormatBytes(totalRam), 0);
+
         }
         public static decimal GetAvailableRam()
         {
@@ -37,21 +32,21 @@ namespace DriveCpuRam_WinApp
 
 
         }
-        public static decimal GetPercentageRam() 
+        public static decimal GetPercentageRam()
         {
             // Calculate usage percentage
-            decimal usagePercentage = (GetUsedRam() / GetTotalRam()) * 100;
+            decimal usagePercentage = GetUsedRam() / GetTotalRam() * 100;
             return usagePercentage;
 
         }
-        
-        
-        
+
+
+
         static decimal FormatBytes(decimal bytes)
         {
-            
+
             int counter = 0;
-            decimal number = (decimal)bytes;
+            decimal number = bytes;
             while (number / 1024 >= 1)
             {
                 number /= 1024;

@@ -1,4 +1,5 @@
 ﻿using DriveCpuRam_WinApp.Entity;
+using DriveCpuRam_WinApp.PcInfo;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -47,8 +48,7 @@ namespace DriveCpuRam_WinApp
                     InsertRamInfo(ramInfoEntity, connection);
                     InsertDriveInfo(driveInfos, connection);
 
-                    int userId = GetUserIdFromEmail(_email, connection);
-                    UpdateUserIdInTables(userId, connection);
+                    
                 }
 
                 MessageBox.Show("Information sent to SQL successfully!");

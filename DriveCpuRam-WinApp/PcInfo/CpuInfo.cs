@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Management;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DriveCpuRam_WinApp
+namespace DriveCpuRam_WinApp.PcInfo
 {
     internal class CpuInfo
     {
@@ -38,7 +33,7 @@ namespace DriveCpuRam_WinApp
             // Get the CPU usage
             PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             cpuCounter.NextValue();
-            System.Threading.Thread.Sleep(2000);
+            Thread.Sleep(2000);
             float cpuUsage = cpuCounter.NextValue();
 
             return cpuUsage;
