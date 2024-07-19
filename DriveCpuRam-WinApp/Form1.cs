@@ -73,35 +73,38 @@ namespace DriveCpuRam_WinApp
             int workFactor = 12; // Cost factor
             string hashedPassword = BCryptNET.HashPassword(password, workFactor);
 
+            string connectionString = "Server=KENAN\\MSSQL2022;Database=UserPcInfo;User Id=Kenan;Password=123456; Encrypt=False";
             // Create a SQL connection object
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Open the connection
+                connection.Open();
+
+                // Create a SQL command object
+                using (SqlCommand command = new SqlCommand())
                 {
-                    // Open the connection
-                    connection.Open();
+                    command.Connection = connection;
+                    // Set the command text to the insert script
+                    command.CommandText = @"
+                    INSERT INTO UserInfo (Name, Surname, Email, PhoneNumber, Password)
+                    VALUES (@Name, @Surname, @Email, @PhoneNumber, @Password);
+                ";
 
-                    // Create a SQL command object
-                    using (SqlCommand command = new SqlCommand())
-                    {
-                        command.Connection = connection;
-                        // Set the command text to the insert script
-                        command.CommandText = @"
-                            INSERT INTO UserInfo (Name, Surname, Email, PhoneNumber, Password)
-                            VALUES (@Name, @Surname, @Email, @PhoneNumber, @Password);
-                        ";
-
-                        // Add parameters to the command
-                        command.Parameters.AddWithValue("@Name", name);
-                        command.Parameters.AddWithValue("@Surname", surname);
-                        command.Parameters.AddWithValue("@Email", email);
-                        command.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
+                    // Add parameters to the command
+                    command.Parameters.AddWithValue("@Name", name);
+                    command.Parameters.AddWithValue("@Surname", surname);
+                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
                         command.Parameters.AddWithValue("@Password", hashedPassword);
 
-                        // Execute the command
-                        command.ExecuteNonQuery();
-                    }
+                    // Execute the command
+                    command.ExecuteNonQuery();
+                    panel1.Visible = false;
+                    panel2.Visible = true;
                 }
+            }
 
                 // Show a success message
                 MessageBox.Show("Account created successfully!");
@@ -149,36 +152,44 @@ namespace DriveCpuRam_WinApp
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Open the connection
+                connection.Open();
 
-                    using (SqlCommand command = new SqlCommand())
-                    {
-                        command.CommandText = @"
+                // Create a SQL command object
+                using (SqlCommand command = new SqlCommand())
+                {
+                    // Set the command text to the select script
+                    command.CommandText = @"
                             SELECT Password 
-                            FROM UserInfo 
+                FROM UserInfo 
                             WHERE Email = @Email;
-                        ";
-                        command.Parameters.AddWithValue("@Email", email);
-                        command.Connection = connection;
+            ";
+
+                    // Add parameters to the command
+                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@Password", password);
+
+                    // Set the connection property of the command
+                    command.Connection = connection;
 
                         string storedHashedPassword = (string)command.ExecuteScalar();
 
                         if (storedHashedPassword != null)
-                        {
+                    {
                             // Verify the password using BCrypt
                             return BCryptNET.Verify(password, storedHashedPassword);
-                        }
-                        else
-                        {
+                    }
+                    else
+                    {
                             return false; // Email not found
-                        }
                     }
                 }
             }
+        }
             catch (Exception ex)
-            {
+        {
                 // Handle any errors that might have occurred
                 MessageBox.Show("An error occurred: " + ex.Message);
                 return false;
