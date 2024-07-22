@@ -1,8 +1,11 @@
 ﻿using DriveCpuRam_WinApp.Entity;
 using DriveCpuRam_WinApp.PcInfo;
 using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic.ApplicationServices;
 using System;
 using System.Collections.Generic;
+using System.Timers;
+using System.Windows.Forms;
 
 namespace DriveCpuRam_WinApp
 {
@@ -10,17 +13,32 @@ namespace DriveCpuRam_WinApp
     {
         private readonly string _connectionString = "Server=KENAN\\MSSQL2022;Database=UserPcInfo;User Id=Kenan;Password=123456; Encrypt=False";
         private readonly string _email;
+        private System.Timers.Timer _timer;
 
         public SqlDataSender(string email)
         {
             _email = email;
+            InitializeTimer();
+        }
+
+        private void InitializeTimer()
+        {
+            _timer = new System.Timers.Timer(60000); // 60000 milliseconds = 1 minute
+            _timer.Elapsed += OnTimedEvent;
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
+        }
+
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            SendInfoToSql();
         }
 
         public void SendInfoToSql()
         {
             try
             {
-            // Get Cpu Data
+                // Get Cpu Data
                 CpuInfoEntity cpuInfoEntity = new CpuInfoEntity()
                 {
                     CpuName = CpuInfo.GetCpuName(),
@@ -28,7 +46,7 @@ namespace DriveCpuRam_WinApp
                     CpuUsage = CpuInfo.GetCpuUsage()
                 };
 
-            // Get Ram Data
+                // Get Ram Data
                 RamInfoEntity ramInfoEntity = new RamInfoEntity()
                 {
                     RamAvailable = (float)Math.Round(RamInfo.GetAvailableRam(), 2),
@@ -38,17 +56,22 @@ namespace DriveCpuRam_WinApp
                 };
 
                 // Get Drive Data
-            List<object[]> driveInfos = DriveInfoProvider.GetDriveInfo();
+                List<object[]> driveInfos = DriveInfoProvider.GetDriveInfo();
 
                 using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
+                {
+                    connection.Open();
+                    // Get UserId based on Email
+                    int userId = GetUserIdFromEmail(_email, connection);
+                    if (userId == 0)
+                    {
+                        MessageBox.Show("User not found.");
+                        return;
+                    }
 
-                    InsertCpuInfo(cpuInfoEntity, connection);
-                    InsertRamInfo(ramInfoEntity, connection);
-                    InsertDriveInfo(driveInfos, connection);
-
-                    
+                    InsertCpuInfo(cpuInfoEntity, userId, connection);
+                    InsertRamInfo(ramInfoEntity, userId, connection);
+                    InsertDriveInfo(driveInfos, userId, connection);
                 }
 
                 MessageBox.Show("Information sent to SQL successfully!");
@@ -58,44 +81,46 @@ namespace DriveCpuRam_WinApp
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
-                
-        private void InsertCpuInfo(CpuInfoEntity cpuInfoEntity, SqlConnection connection)
-        {
-            string sqlCpu = "INSERT INTO CpuInfo (CpuName, CpuCoreNumber, UsedCpuPercentage, Email) VALUES (@CpuName, @CpuCoreNumber, @UsedCpuPercentage, @Email)";
 
-                using (SqlCommand command = new SqlCommand(sqlCpu, connection))
-                {
+        private void InsertCpuInfo(CpuInfoEntity cpuInfoEntity,int userId, SqlConnection connection)
+        {
+            string sqlCpu = "INSERT INTO CpuInfo (CpuName, CpuCoreNumber, UsedCpuPercentage,UserId, Email) VALUES (@CpuName, @CpuCoreNumber, @UsedCpuPercentage,@UserId, @Email)";
+
+            using (SqlCommand command = new SqlCommand(sqlCpu, connection))
+            {
                 command.Parameters.AddWithValue("@CpuName", cpuInfoEntity.CpuName);
                 command.Parameters.AddWithValue("@CpuCoreNumber", cpuInfoEntity.CpuCore);
                 command.Parameters.AddWithValue("@UsedCpuPercentage", cpuInfoEntity.CpuUsage);
+                command.Parameters.AddWithValue("@UserId", userId);
                 command.Parameters.AddWithValue("@Email", _email);
 
-                    command.ExecuteNonQuery();
-                }
+                command.ExecuteNonQuery();
+            }
         }
 
-        private void InsertRamInfo(RamInfoEntity ramInfoEntity, SqlConnection connection)
+        private void InsertRamInfo(RamInfoEntity ramInfoEntity, int userId, SqlConnection connection)
         {
-            string sqlRam = "INSERT INTO RamInfo (TotalMemory, AvailableMemory, UsedMemory, UsagePercentage, Email) VALUES (@TotalMemory, @AvailableMemory, @UsedMemory, @UsagePercentage, @Email)";
+            string sqlRam = "INSERT INTO RamInfo (TotalMemory, AvailableMemory, UsedMemory, UsagePercentage,UserId, Email) VALUES (@TotalMemory, @AvailableMemory, @UsedMemory, @UsagePercentage,@UserId, @Email)";
 
-                using (SqlCommand command = new SqlCommand(sqlRam, connection))
-                {
+            using (SqlCommand command = new SqlCommand(sqlRam, connection))
+            {
                 command.Parameters.AddWithValue("@TotalMemory", (decimal)ramInfoEntity.RamTotal);
                 command.Parameters.AddWithValue("@AvailableMemory", (decimal)ramInfoEntity.RamAvailable);
                 command.Parameters.AddWithValue("@UsedMemory", (decimal)ramInfoEntity.RamUsed);
                 command.Parameters.AddWithValue("@UsagePercentage", (decimal)ramInfoEntity.RamPercentage);
+                command.Parameters.AddWithValue("@UserId", userId);
                 command.Parameters.AddWithValue("@Email", _email);
 
-                    command.ExecuteNonQuery();
-                }
+                command.ExecuteNonQuery();
+            }
         }
 
-        private void InsertDriveInfo(List<object[]> driveInfos, SqlConnection connection)
+        private void InsertDriveInfo(List<object[]> driveInfos, int userId, SqlConnection connection)
         {
-            string query = "INSERT INTO DriveInfo (DriveName, TotalSpaceGB, AvailableSpaceGB, UsedSpaceGB, UsedPercentage, Email) VALUES (@DriveName, @TotalSpaceGB, @AvailableSpaceGB, @UsedSpaceGB, @UsedPercentage, @Email)";
+            string query = "INSERT INTO DriveInfo (DriveName, TotalSpaceGB, AvailableSpaceGB, UsedSpaceGB, UsedPercentage,UserId, Email) VALUES (@DriveName, @TotalSpaceGB, @AvailableSpaceGB, @UsedSpaceGB, @UsedPercentage,@UserId, @Email)";
 
-                foreach (var driveInfo in driveInfos)
-                {
+            foreach (var driveInfo in driveInfos)
+            {
                 DriveInfoEntity driveInfoEntity = new DriveInfoEntity()
                 {
                     DriveName = driveInfo[0].ToString(),
@@ -105,17 +130,18 @@ namespace DriveCpuRam_WinApp
                     UsedPercentage = decimal.Parse(driveInfo[4].ToString()),
                 };
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
                     command.Parameters.AddWithValue("@DriveName", driveInfoEntity.DriveName);
                     command.Parameters.AddWithValue("@TotalSpaceGB", driveInfoEntity.TotalSpaceGB);
                     command.Parameters.AddWithValue("@AvailableSpaceGB", driveInfoEntity.AvailableSpaceGB);
                     command.Parameters.AddWithValue("@UsedSpaceGB", driveInfoEntity.UsedSpaceGB);
                     command.Parameters.AddWithValue("@UsedPercentage", driveInfoEntity.UsedPercentage);
+                    command.Parameters.AddWithValue("@UserId", userId);
                     command.Parameters.AddWithValue("@Email", _email);
 
-                        command.ExecuteNonQuery();
-                    }
+                    command.ExecuteNonQuery();
+                }
             }
         }
 
@@ -143,7 +169,7 @@ namespace DriveCpuRam_WinApp
             UpdateUserId("CpuInfo", userId, connection);
             UpdateUserId("RamInfo", userId, connection);
             UpdateUserId("DriveInfo", userId, connection);
-                }
+        }
 
         private void UpdateUserId(string tableName, int userId, SqlConnection connection)
         {

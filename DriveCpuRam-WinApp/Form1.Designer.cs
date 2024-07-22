@@ -67,17 +67,18 @@
             panel1.Controls.Add(UserSurname);
             panel1.Controls.Add(UserName);
             panel1.Controls.Add(UserNameTextbox);
-            panel1.Location = new Point(33, 108);
+            panel1.Location = new Point(38, 144);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(253, 209);
+            panel1.Size = new Size(289, 279);
             panel1.TabIndex = 2;
-            
             // 
             // btnCreate
             // 
-            btnCreate.Location = new Point(71, 183);
+            btnCreate.Location = new Point(81, 244);
+            btnCreate.Margin = new Padding(3, 4, 3, 4);
             btnCreate.Name = "btnCreate";
-            btnCreate.Size = new Size(103, 23);
+            btnCreate.Size = new Size(118, 31);
             btnCreate.TabIndex = 12;
             btnCreate.Text = "Create Account";
             btnCreate.UseVisualStyleBackColor = true;
@@ -85,97 +86,101 @@
             // 
             // UserPasswordTextbox
             // 
-            UserPasswordTextbox.Location = new Point(150, 131);
+            UserPasswordTextbox.Location = new Point(171, 175);
+            UserPasswordTextbox.Margin = new Padding(3, 4, 3, 4);
             UserPasswordTextbox.Name = "UserPasswordTextbox";
             UserPasswordTextbox.PasswordChar = '*';
-            UserPasswordTextbox.Size = new Size(100, 23);
+            UserPasswordTextbox.Size = new Size(114, 27);
             UserPasswordTextbox.TabIndex = 9;
             UserPasswordTextbox.TextChanged += UserPasswordTextbox_TextChanged;
             // 
             // UserPhoneNumberTextbox
             // 
-            UserPhoneNumberTextbox.Location = new Point(150, 98);
+            UserPhoneNumberTextbox.Location = new Point(171, 131);
+            UserPhoneNumberTextbox.Margin = new Padding(3, 4, 3, 4);
             UserPhoneNumberTextbox.Name = "UserPhoneNumberTextbox";
-            UserPhoneNumberTextbox.Size = new Size(100, 23);
+            UserPhoneNumberTextbox.Size = new Size(114, 27);
             UserPhoneNumberTextbox.TabIndex = 8;
             UserPhoneNumberTextbox.TextChanged += UserPhoneNumberTextbox_TextChanged;
             // 
             // UserEmailTextbox
             // 
-            UserEmailTextbox.Location = new Point(150, 64);
+            UserEmailTextbox.Location = new Point(171, 85);
+            UserEmailTextbox.Margin = new Padding(3, 4, 3, 4);
             UserEmailTextbox.Name = "UserEmailTextbox";
-            UserEmailTextbox.Size = new Size(100, 23);
+            UserEmailTextbox.Size = new Size(114, 27);
             UserEmailTextbox.TabIndex = 7;
             UserEmailTextbox.TextChanged += UserEmailTextbox_TextChanged;
             // 
             // UserSurnameTextbox
             // 
-            UserSurnameTextbox.Location = new Point(150, 35);
+            UserSurnameTextbox.Location = new Point(171, 47);
+            UserSurnameTextbox.Margin = new Padding(3, 4, 3, 4);
             UserSurnameTextbox.Name = "UserSurnameTextbox";
-            UserSurnameTextbox.Size = new Size(100, 23);
+            UserSurnameTextbox.Size = new Size(114, 27);
             UserSurnameTextbox.TabIndex = 6;
             UserSurnameTextbox.TextChanged += UserSurnameTextbox_TextChanged;
             // 
             // UserPassword
             // 
             UserPassword.AutoSize = true;
-            UserPassword.Location = new Point(3, 134);
+            UserPassword.Location = new Point(3, 179);
             UserPassword.Name = "UserPassword";
-            UserPassword.Size = new Size(57, 15);
+            UserPassword.Size = new Size(70, 20);
             UserPassword.TabIndex = 5;
             UserPassword.Text = "Password";
             // 
             // UserPhoneNumber
             // 
             UserPhoneNumber.AutoSize = true;
-            UserPhoneNumber.Location = new Point(3, 106);
+            UserPhoneNumber.Location = new Point(3, 141);
             UserPhoneNumber.Name = "UserPhoneNumber";
-            UserPhoneNumber.Size = new Size(88, 15);
+            UserPhoneNumber.Size = new Size(108, 20);
             UserPhoneNumber.TabIndex = 4;
             UserPhoneNumber.Text = "Phone Number";
             // 
             // UserEmail
             // 
             UserEmail.AutoSize = true;
-            UserEmail.Location = new Point(3, 67);
+            UserEmail.Location = new Point(3, 89);
             UserEmail.Name = "UserEmail";
-            UserEmail.Size = new Size(36, 15);
+            UserEmail.Size = new Size(46, 20);
             UserEmail.TabIndex = 3;
             UserEmail.Text = "Email";
             // 
             // UserSurname
             // 
             UserSurname.AutoSize = true;
-            UserSurname.Location = new Point(3, 38);
+            UserSurname.Location = new Point(3, 51);
             UserSurname.Name = "UserSurname";
-            UserSurname.Size = new Size(54, 15);
+            UserSurname.Size = new Size(67, 20);
             UserSurname.TabIndex = 2;
             UserSurname.Text = "Surname";
-            
             // 
             // UserName
             // 
             UserName.AutoSize = true;
-            UserName.Location = new Point(3, 11);
+            UserName.Location = new Point(3, 15);
             UserName.Name = "UserName";
-            UserName.Size = new Size(39, 15);
+            UserName.Size = new Size(49, 20);
             UserName.TabIndex = 1;
             UserName.Text = "Name";
-            
             // 
             // UserNameTextbox
             // 
-            UserNameTextbox.Location = new Point(150, 3);
+            UserNameTextbox.Location = new Point(171, 4);
+            UserNameTextbox.Margin = new Padding(3, 4, 3, 4);
             UserNameTextbox.Name = "UserNameTextbox";
-            UserNameTextbox.Size = new Size(100, 23);
+            UserNameTextbox.Size = new Size(114, 27);
             UserNameTextbox.TabIndex = 0;
             UserNameTextbox.TextChanged += UserNameTextbox_TextChanged;
             // 
             // btnCreateAccount
             // 
-            btnCreateAccount.Location = new Point(46, 21);
+            btnCreateAccount.Location = new Point(53, 28);
+            btnCreateAccount.Margin = new Padding(3, 4, 3, 4);
             btnCreateAccount.Name = "btnCreateAccount";
-            btnCreateAccount.Size = new Size(108, 23);
+            btnCreateAccount.Size = new Size(123, 31);
             btnCreateAccount.TabIndex = 10;
             btnCreateAccount.Text = "Create Account";
             btnCreateAccount.UseVisualStyleBackColor = true;
@@ -188,16 +193,18 @@
             panel2.Controls.Add(UserEmailLoginTextbox);
             panel2.Controls.Add(UserPassword1);
             panel2.Controls.Add(UserEmail1);
-            panel2.Location = new Point(518, 108);
+            panel2.Location = new Point(592, 144);
+            panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(253, 209);
+            panel2.Size = new Size(289, 279);
             panel2.TabIndex = 3;
             // 
             // btnLoginSubmit
             // 
-            btnLoginSubmit.Location = new Point(99, 183);
+            btnLoginSubmit.Location = new Point(113, 244);
+            btnLoginSubmit.Margin = new Padding(3, 4, 3, 4);
             btnLoginSubmit.Name = "btnLoginSubmit";
-            btnLoginSubmit.Size = new Size(75, 23);
+            btnLoginSubmit.Size = new Size(86, 31);
             btnLoginSubmit.TabIndex = 13;
             btnLoginSubmit.Text = "Login";
             btnLoginSubmit.UseVisualStyleBackColor = true;
@@ -205,42 +212,45 @@
             // 
             // UserPasswordLoginTextbox
             // 
-            UserPasswordLoginTextbox.Location = new Point(150, 131);
+            UserPasswordLoginTextbox.Location = new Point(171, 175);
+            UserPasswordLoginTextbox.Margin = new Padding(3, 4, 3, 4);
             UserPasswordLoginTextbox.Name = "UserPasswordLoginTextbox";
             UserPasswordLoginTextbox.PasswordChar = '*';
-            UserPasswordLoginTextbox.Size = new Size(100, 23);
+            UserPasswordLoginTextbox.Size = new Size(114, 27);
             UserPasswordLoginTextbox.TabIndex = 9;
             // 
             // UserEmailLoginTextbox
             // 
-            UserEmailLoginTextbox.Location = new Point(150, 64);
+            UserEmailLoginTextbox.Location = new Point(171, 85);
+            UserEmailLoginTextbox.Margin = new Padding(3, 4, 3, 4);
             UserEmailLoginTextbox.Name = "UserEmailLoginTextbox";
-            UserEmailLoginTextbox.Size = new Size(100, 23);
+            UserEmailLoginTextbox.Size = new Size(114, 27);
             UserEmailLoginTextbox.TabIndex = 7;
             // 
             // UserPassword1
             // 
             UserPassword1.AutoSize = true;
-            UserPassword1.Location = new Point(3, 134);
+            UserPassword1.Location = new Point(3, 179);
             UserPassword1.Name = "UserPassword1";
-            UserPassword1.Size = new Size(57, 15);
+            UserPassword1.Size = new Size(70, 20);
             UserPassword1.TabIndex = 5;
             UserPassword1.Text = "Password";
             // 
             // UserEmail1
             // 
             UserEmail1.AutoSize = true;
-            UserEmail1.Location = new Point(3, 72);
+            UserEmail1.Location = new Point(3, 96);
             UserEmail1.Name = "UserEmail1";
-            UserEmail1.Size = new Size(36, 15);
+            UserEmail1.Size = new Size(46, 20);
             UserEmail1.TabIndex = 3;
             UserEmail1.Text = "Email";
             // 
             // btnLogin
             // 
-            btnLogin.Location = new Point(46, 62);
+            btnLogin.Location = new Point(53, 83);
+            btnLogin.Margin = new Padding(3, 4, 3, 4);
             btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(108, 23);
+            btnLogin.Size = new Size(123, 31);
             btnLogin.TabIndex = 11;
             btnLogin.Text = "Login";
             btnLogin.UseVisualStyleBackColor = true;
@@ -250,20 +260,21 @@
             // 
             panel3.Controls.Add(btnCreateAccount);
             panel3.Controls.Add(btnLogin);
-            panel3.Location = new Point(302, 162);
+            panel3.Location = new Point(345, 216);
+            panel3.Margin = new Padding(3, 4, 3, 4);
             panel3.Name = "panel3";
-            panel3.Size = new Size(200, 100);
+            panel3.Size = new Size(229, 133);
             panel3.TabIndex = 13;
-            
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(914, 600);
             Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "Form1";
             panel1.ResumeLayout(false);

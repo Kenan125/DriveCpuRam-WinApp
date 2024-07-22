@@ -100,6 +100,7 @@ namespace DriveCpuRam_WinApp
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                conn.Open();
                 string query = "UPDATE CpuInfo SET CpuName = @CpuName, CpuCoreNumber = @CpuCoreNumber, UsedCpuPercentage = @UsedCpuPercentage WHERE Email = @Email";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@CpuName", cpuInfoEntity.CpuName);
@@ -107,8 +108,9 @@ namespace DriveCpuRam_WinApp
                 cmd.Parameters.AddWithValue("@UsedCpuPercentage", cpuInfoEntity.CpuUsage);
                 cmd.Parameters.AddWithValue("@Email", _email);
 
-                conn.Open();
+                
                 cmd.ExecuteNonQuery();
+                conn.Close();
             }
         }
 

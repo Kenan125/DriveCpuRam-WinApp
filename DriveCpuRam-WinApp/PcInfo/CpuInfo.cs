@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using DriveCpuRam_WinApp.Entity;
+using System.Diagnostics;
 using System.Management;
 
 namespace DriveCpuRam_WinApp.PcInfo
@@ -8,16 +9,20 @@ namespace DriveCpuRam_WinApp.PcInfo
         public static string GetCpuName()
         {
 
-
+            //CpuInfoEntity _cpuName = new CpuInfoEntity();
             string cpuName = "";
+            //_cpuName.CpuName = "";
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
             foreach (ManagementObject share in searcher.Get())
             {
                 cpuName = share["Name"].ToString();
+
+                //_cpuName.CpuName = share["Name"].ToString();
             }
 
-
             return cpuName;
+
+            //return _cpuName.CpuName;
 
 
         }
