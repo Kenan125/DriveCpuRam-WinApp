@@ -1,10 +1,10 @@
 ﻿namespace DriveCpuRam_WinApp.Entity
 {
-    internal class RamInfoEntity
+    public class RamInfoEntity
     {
-        public float RamAvailable { get; set; }
-        public float RamTotal { get; set; }
-        public float RamUsed { get; set; }
-        public float RamPercentage { get; set; }
+        public decimal RamAvailable { get; set; }
+        public decimal RamTotal { get; set; }
+        public decimal RamUsed { get; set; }
+        public decimal RamPercentage { get; set; }
     }
 }

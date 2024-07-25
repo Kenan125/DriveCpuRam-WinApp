@@ -1,4 +1,6 @@
-﻿namespace DriveCpuRam_WinApp
+﻿using DriveCpuRam_WinApp.Data;
+
+namespace DriveCpuRam_WinApp
 {
     partial class UserInfoDisplay
     {

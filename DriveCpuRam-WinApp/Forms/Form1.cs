@@ -1,3 +1,5 @@
+using DriveCpuRam_WinApp.Data;
+using DriveCpuRam_WinApp.Entity;
 using Microsoft.Data.SqlClient;
 using BCryptNET = BCrypt.Net.BCrypt;
 
@@ -6,15 +8,18 @@ namespace DriveCpuRam_WinApp
     public partial class Form1 : Form
     {
         UserInfoDisplay userInfoDisplay = UserInfoDisplay.GetInstance();
-        
+        private readonly UserInfoEntity _userInfoEntity = new UserInfoEntity();
+
         private readonly string connectionString = "Server=KENAN\\MSSQL2022;Database=UserPcInfo;User Id=Kenan;Password=123456; Encrypt=False";
+        private readonly EmailSettings emailSettings = new EmailSettings();
+        //private readonly UserInfoEntity
+
 
         public Form1()
         {
             InitializeComponent();
             panel1.Visible = false;
             panel2.Visible = false;
-            
         }
 
         private void UserNameTextbox_TextChanged(object sender, EventArgs e)
@@ -74,8 +79,6 @@ namespace DriveCpuRam_WinApp
             int workFactor = 12; // Cost factor
             string hashedPassword = BCryptNET.HashPassword(password, workFactor);
 
-            string connectionString = "Server=KENAN\\MSSQL2022;Database=UserPcInfo;User Id=Kenan;Password=123456; Encrypt=False";
-            // Create a SQL connection object
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -89,9 +92,9 @@ namespace DriveCpuRam_WinApp
                         command.Connection = connection;
                         // Set the command text to the insert script
                         command.CommandText = @"
-                    INSERT INTO UserInfo (Name, Surname, Email, PhoneNumber, Password)
-                    VALUES (@Name, @Surname, @Email, @PhoneNumber, @Password);
-                ";
+                            INSERT INTO UserInfo (Name, Surname, Email, PhoneNumber, Password)
+                            VALUES (@Name, @Surname, @Email, @PhoneNumber, @Password);
+                        ";
 
                         // Add parameters to the command
                         command.Parameters.AddWithValue("@Name", name);
@@ -104,14 +107,12 @@ namespace DriveCpuRam_WinApp
                         command.ExecuteNonQuery();
                         panel1.Visible = false;
                         panel2.Visible = true;
-
                     }
                 }
 
                 // Show a success message
-                MessageBox.Show("Account created successfully!");
-                SqlDataSender sqlDataSender = new SqlDataSender(email);
-                sqlDataSender.SendInfoToSql();
+                MessageBox.Show("Account created successfully!\nPlease Login to continue");
+
                 panel1.Visible = false;
                 panel2.Visible = true;
             }
@@ -133,11 +134,12 @@ namespace DriveCpuRam_WinApp
                 // Login successful
                 MessageBox.Show("Login successful!");
 
-                // You can add your logic to retrieve UserId if needed
+                // Store email in UserInfoEntity
+                _userInfoEntity.Email = email;
+                // Pass UserInfoEntity instance to UserInfoDisplay form
+                userInfoDisplay = new UserInfoDisplay(_userInfoEntity.Email, emailSettings);
 
-                /*SqlDataUpdater sqlUpdater = new SqlDataUpdater(email);
-                sqlUpdater.UpdateLogin();*/
-                SqlDataSender sqlDataSender = new SqlDataSender(email);
+                SqlDataSender sqlDataSender = new SqlDataSender(email, emailSettings);
                 sqlDataSender.SendInfoToSql();
 
                 panel3.Visible = false;
@@ -168,14 +170,13 @@ namespace DriveCpuRam_WinApp
                         // Set the command text to the select script
                         command.CommandText = @"
                             SELECT Password 
-                FROM UserInfo 
+                            FROM UserInfo 
                             WHERE Email = @Email;
-            ";
+                        ";
 
                         // Add parameters to the command
                         command.Parameters.AddWithValue("@Email", email);
                         command.Parameters.AddWithValue("@Password", password);
-
                         // Set the connection property of the command
                         command.Connection = connection;
 
@@ -199,6 +200,11 @@ namespace DriveCpuRam_WinApp
                 MessageBox.Show("An error occurred: " + ex.Message);
                 return false;
             }
+        }
+
+        private void UserEmail1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

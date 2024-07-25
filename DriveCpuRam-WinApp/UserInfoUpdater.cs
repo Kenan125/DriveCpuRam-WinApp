@@ -37,10 +37,10 @@ namespace DriveCpuRam_WinApp
                 // Get Ram Data
                 RamInfoEntity ramInfoEntity = new RamInfoEntity()
                 {
-                    RamAvailable = (float)Math.Round(RamInfo.GetAvailableRam(), 2),
-                    RamTotal = (float)Math.Round(RamInfo.GetTotalRam(), 2),
-                    RamUsed = (float)Math.Round(RamInfo.GetUsedRam(), 2),
-                    RamPercentage = (float)Math.Round(RamInfo.GetPercentageRam(), 2)
+                    RamAvailable = Math.Round(RamInfo.GetAvailableRam(), 2),
+                    RamTotal = Math.Round(RamInfo.GetTotalRam(), 2),
+                    RamUsed = Math.Round(RamInfo.GetUsedRam(), 2),
+                    RamPercentage = Math.Round(RamInfo.GetPercentageRam(), 2)
                 };
 
                 // Get Drive Data

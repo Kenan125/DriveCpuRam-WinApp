@@ -1,6 +1,6 @@
 ﻿namespace DriveCpuRam_WinApp.Entity
 {
-    internal class DriveInfoEntity
+    public class DriveInfoEntity
     {
         public string DriveName { get; set; }
         public decimal TotalSpaceGB { get; set; }
