@@ -22,31 +22,42 @@ namespace ControlUI
         }
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            var result = _userManager.Login(txtEmail.Text, txtPassword.Text);
-            if (result.Success)
+            try
             {
-                var userIdResult = _userManager.GetUserIdByEmail(txtEmail.Text);
-                if (userIdResult.Success)
+                var result = _userManager.Login(txtEmail.Text, txtPassword.Text);
+                if (result.Success)
                 {
-                    var userId = userIdResult.Data;
-                    var cpuManager = new CpuManager(new EfCpuDal());
-                    var ramManager = new RamManager(new EfRamDal());
-                    var driveManager = new DriveManager(new EfDriveDal());
-                    var user = _userManager.GetUserById(userId).Data;
-                    MainForm mainForm = new MainForm(_userManager, cpuManager, ramManager, driveManager, user);
-                    mainForm.Show();
-                    this.Hide();
+                    var userIdResult = _userManager.GetUserIdByEmail(txtEmail.Text);
+                    if (userIdResult.Success)
+                    {
+                        var userId = userIdResult.Data;
+                        var cpuManager = new CpuManager(new EfCpuDal());
+                        var ramManager = new RamManager(new EfRamDal());
+                        var driveManager = new DriveManager(new EfDriveDal());
+                        var user = _userManager.GetUserById(userId).Data;
+                        var mainForm = new MainForm(_userManager, cpuManager, ramManager, driveManager, user);
+                        mainForm.Show();
+
+                        this.Hide();
+                    }
+                    else
+                    {
+                        MessageBox.Show(userIdResult.Message);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show(userIdResult.Message);
+                    MessageBox.Show(result.Message);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show(result.Message);
+                // Handle or log the exception appropriately
+                MessageBox.Show("An error occurred while trying to log in. Please try again.");
             }
         }
+
+        
 
         private void btnRegister_Click(object sender, EventArgs e)
         {

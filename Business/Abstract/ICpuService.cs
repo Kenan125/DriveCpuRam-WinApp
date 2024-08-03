@@ -14,7 +14,7 @@ namespace Business.Abstract
         IDataResult<Cpu> GetCpuCore();
         IDataResult<Cpu> GetCpuUsage();
 
-        IResult SetUserIdForCpu(string email, int userId);
+        
         
 
     }

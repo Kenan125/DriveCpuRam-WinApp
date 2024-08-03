@@ -2,6 +2,12 @@
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ControlUI
@@ -25,12 +31,14 @@ namespace ControlUI
             _user = user;
 
             _timer = new System.Windows.Forms.Timer();
-            _timer.Interval = 6000; // 6 seconds
+            _timer.Interval = 60000; // 60 seconds
             _timer.Tick += Timer_Tick;
             _timer.Start();
 
-            dataGridView1.DataError += DataGridView1_DataError;
-
+            //dataGridView1.DataError += DataGridView1_DataError; // Subscribe to DataError event
+            dataGridViewCpu.DataError += DataGridView_DataError;
+            dataGridViewRam.DataError += DataGridView_DataError;
+            dataGridViewDrive.DataError += DataGridView_DataError;
             LoadData();
         }
 
@@ -39,34 +47,23 @@ namespace ControlUI
             LoadData();
             SendDataToSqlServer();
         }
-        private void DataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            // Handle the data error here
-            MessageBox.Show("An error occurred while binding data to the DataGridView: " + e.Exception.Message);
-            e.ThrowException = false;
-        }
 
         private void LoadData()
         {
-            var cpuData = _userManager.GetUserCpuInfo(_user.Id).Data;
-            var ramData = _userManager.GetUserRamInfo(_user.Id).Data;
-            var driveData = _userManager.GetUserDriveInfo(_user.Id).Data;
+            var cpuData = _cpuManager.GetCpuDataByUserId(_user.Id).Data;
+            var ramData = _ramManager.GetRamDataByUserId(_user.Id).Data;
+            var driveData = _driveManager.GetDriveDataByUserId(_user.Id).Data;
 
-            // Combine the data into a single list if necessary
-            var allData = new List<object>();
-            allData.AddRange(cpuData);
-            allData.AddRange(ramData);
-            allData.AddRange(driveData);
-
-            // Assuming you have a DataGridView named dataGridView1
-            dataGridView1.DataSource = allData;
+            dataGridViewCpu.DataSource = cpuData;
+            dataGridViewRam.DataSource = ramData;
+            dataGridViewDrive.DataSource = driveData;
         }
 
         private void SendDataToSqlServer()
         {
-            _cpuManager.SendCpuData(_user.Id);
-            _ramManager.SendRamData(_user.Id);
-            _driveManager.SendDriveData(_user.Id);
+            _cpuManager.SendCpuData(_user.Id, _user.Email);
+            _ramManager.SendRamData(_user.Id, _user.Email);
+            _driveManager.SendDriveData(_user.Id, _user.Email);
         }
 
         private void btnSendEmail_Click(object sender, EventArgs e)
@@ -82,6 +79,12 @@ namespace ControlUI
             // You can use SmtpClient or any other email sending service
         }
 
-        
+        // This method handles the DataError event
+        private void DataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            // Handle the data error here
+            MessageBox.Show("An error occurred while binding data to the DataGridView: " + e.Exception.Message);
+            e.ThrowException = false;
+        }
     }
 }

@@ -20,7 +20,6 @@ namespace Business.Concrete
 
         public IDataResult<Cpu> GetCpuCore()
         {
-
             // Get the number of CPU cores
             int cpuCores = Environment.ProcessorCount;
             var result = new Cpu { CpuCore = cpuCores };
@@ -29,7 +28,6 @@ namespace Business.Concrete
 
         public IDataResult<Cpu> GetCpuName()
         {
-
             string cpuName = "";
 
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
@@ -52,39 +50,33 @@ namespace Business.Concrete
             return new SuccessDataResult<Cpu>(result);
         }
 
-        public IResult SendCpuData(int userId)
-        {
-            var cpuCoreResult = GetCpuCore().Data;
-            var cpuNameResult = GetCpuName().Data;
-            var cpuUsageResult = GetCpuUsage().Data;
-
-            var cpuInfo = new Cpu
-            {
-                CpuCore = cpuCoreResult.CpuCore,
-                CpuName = cpuNameResult.CpuName,
-                CpuUsage = cpuUsageResult.CpuUsage,
-                UserId = userId,
-                Email = "user@example.com" // Replace with actual user email if needed
-            };
-
-            _cpuDal.Add(cpuInfo);
-            return new SuccessResult("CPU data sent to SQL");
-        }
         public void SaveCpuInfo(Cpu cpu)
         {
             _cpuDal.Add(cpu);
         }
 
-        public IResult SetUserIdForCpu(string email, int userId)
+        public IResult SendCpuData(int userId, string email)
         {
-            var cpuRecords = _cpuDal.GetAll(c => c.Email == email);
-            foreach (var record in cpuRecords)
+            var cpuCoreResult = GetCpuCore().Data.CpuCore;
+            var cpuNameResult = GetCpuName().Data.CpuName;
+            var cpuUsageResult = GetCpuUsage().Data.CpuUsage;
+
+            var cpuInfo = new Cpu
             {
-                record.UserId = userId;
-                _cpuDal.Update(record);
-            }
-            return new SuccessResult("User ID set for CPU records.");
+                CpuCore = cpuCoreResult,
+                CpuName = cpuNameResult,
+                CpuUsage = cpuUsageResult,
+                UserId = userId,
+                Email = email
+            };
+
+            _cpuDal.Add(cpuInfo);
+            return new SuccessResult("CPU data sent to SQL");
+        }
+        public IDataResult<List<Cpu>> GetCpuDataByUserId(int userId)
+        {
+            var result = _cpuDal.GetAll(c => c.UserId == userId);
+            return new SuccessDataResult<List<Cpu>>(result);
         }
     }
-    
 }

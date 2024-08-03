@@ -11,6 +11,6 @@ namespace Business.Abstract
     public interface IDriveService
     {
         IDataResult<List<Drive>> GetDrives();
-        IResult SetUserIdForDrive(string email, int userId);
+        
     }
 }

@@ -50,26 +50,26 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Drive>>(result);
         }
 
-        public IResult SendDriveData(int userId)
+        public IResult SendDriveData(int userId, string email)
         {
-            var drives = GetDrives().Data;
-            foreach (var drive in drives)
+            var drivesResult = GetDrives().Data;
+
+            foreach (var driveInfo in drivesResult)
             {
-                drive.UserId = userId;
-                drive.Email = "user@example.com"; // Replace with actual user email if needed
-                _driveDal.Add(drive);
+                driveInfo.UserId = userId;
+                driveInfo.Email = email;
+                _driveDal.Add(driveInfo);
             }
+
             return new SuccessResult("Drive data sent to SQL");
         }
-        public IResult SetUserIdForDrive(string email, int userId)
+
+        public IDataResult<List<Drive>> GetDriveDataByUserId(int userId)
         {
-            var driveRecords = _driveDal.GetAll(d => d.Email == email);
-            foreach (var record in driveRecords)
-            {
-                record.UserId = userId;
-                _driveDal.Update(record);
-            }
-            return new SuccessResult("User ID set for Drive records.");
+            var result = _driveDal.GetAll(d => d.UserId == userId);
+            return new SuccessDataResult<List<Drive>>(result);
         }
+
+
     }
 }
