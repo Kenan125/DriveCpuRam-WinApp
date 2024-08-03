@@ -30,10 +30,10 @@ namespace Business.Concrete
                 if (drive.IsReady)
                 {
                     string driveName = drive.Name.TrimEnd('\\');
-                    double totalSpace = drive.TotalSize / 1024.00 / 1024.00 / 1024; // Convert to GB
-                    double availableSpace = drive.AvailableFreeSpace/ 1024.0 / 1024 / 1024; // Convert to GB
-                    double usedSpace = totalSpace - availableSpace;
-                    double percentage = usedSpace / totalSpace * 100;
+                    decimal totalSpace = (decimal)(drive.TotalSize / 1024.00 / 1024.00 / 1024); // Convert to GB
+                    decimal availableSpace = (decimal)(drive.AvailableFreeSpace/ 1024.0 / 1024 / 1024); // Convert to GB
+                    decimal usedSpace = totalSpace - availableSpace;
+                    decimal percentage = usedSpace / totalSpace * 100;
 
                     var driveInfo = new Drive
                     {
@@ -50,16 +50,26 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Drive>>(result);
         }
 
-        public IResult SendDriveData()
+        public IResult SendDriveData(int userId)
         {
-            var driveInfosResult = GetDrives().Data;
-
-            foreach (var driveInfo in driveInfosResult)
+            var drives = GetDrives().Data;
+            foreach (var drive in drives)
             {
-                _driveDal.Add(driveInfo);
+                drive.UserId = userId;
+                drive.Email = "user@example.com"; // Replace with actual user email if needed
+                _driveDal.Add(drive);
             }
-
-            return new SuccessResult(Messages.SendDriveSql);
+            return new SuccessResult("Drive data sent to SQL");
+        }
+        public IResult SetUserIdForDrive(string email, int userId)
+        {
+            var driveRecords = _driveDal.GetAll(d => d.Email == email);
+            foreach (var record in driveRecords)
+            {
+                record.UserId = userId;
+                _driveDal.Update(record);
+            }
+            return new SuccessResult("User ID set for Drive records.");
         }
     }
 }

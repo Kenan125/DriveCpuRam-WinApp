@@ -79,23 +79,35 @@ namespace Business.Concrete
             return new SuccessDataResult<Ram>(result);
         }
 
-        public IResult SendRamData()
+        public IResult SendRamData(int userId)
         {
-            var totalRamResult = GetTotalRam().Data;
-            var availableRamResult = GetAvailableRam().Data;
-            var usedRamResult = GetUsedRam().Data;
+            var totalMemoryResult = GetTotalRam().Data;
+            var usedMemoryResult = GetUsedRam().Data;
+            var availableMemoryResult = GetAvailableRam().Data;
             var usagePercentageResult = GetPercentageRam().Data;
 
             var ramInfo = new Ram
             {
-                RamTotal = totalRamResult.RamTotal,
-                RamAvailable = availableRamResult.RamAvailable,
-                RamUsed = usedRamResult.RamUsed,
-                UsagePercentage = usagePercentageResult.UsagePercentage
+                RamTotal = totalMemoryResult.RamTotal,
+                RamUsed = usedMemoryResult.RamUsed,
+                RamAvailable = availableMemoryResult.RamAvailable,
+                UsagePercentage = usagePercentageResult.UsagePercentage,
+                UserId = userId,
+                Email = "user@example.com" // Replace with actual user email if needed
             };
 
             _ramDal.Add(ramInfo);
-            return new SuccessResult(Messages.SendRamSql);
+            return new SuccessResult("RAM data sent to SQL");
+        }
+        public IResult SetUserIdForRam(string email, int userId)
+        {
+            var ramRecords = _ramDal.GetAll(r => r.Email == email);
+            foreach (var record in ramRecords)
+            {
+                record.UserId = userId;
+                _ramDal.Update(record);
+            }
+            return new SuccessResult("User ID set for RAM records.");
         }
 
     }

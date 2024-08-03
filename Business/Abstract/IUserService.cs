@@ -27,5 +27,9 @@ namespace Business.Abstract
         IDataResult<List<Cpu>> GetUserCpuInfo(int userId);
         IDataResult<List<Drive>> GetUserDriveInfo(int userId);
         IDataResult<List<Ram>> GetUserRamInfo(int userId);
+
+        // Additional Methods
+        IDataResult<User> GetUserByEmail(string email);
+        IDataResult<int> GetUserIdByEmail(string email);
     }
 }

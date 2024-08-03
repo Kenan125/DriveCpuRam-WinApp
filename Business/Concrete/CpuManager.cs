@@ -48,11 +48,11 @@ namespace Business.Concrete
             cpuCounter.NextValue();
             Thread.Sleep(2000);
             float cpuUsage = cpuCounter.NextValue();
-            var result = new Cpu { CpuUsage = cpuUsage };
+            var result = new Cpu { CpuUsage = (decimal)cpuUsage };
             return new SuccessDataResult<Cpu>(result);
         }
 
-        public IResult SendCpuData()
+        public IResult SendCpuData(int userId)
         {
             var cpuCoreResult = GetCpuCore().Data;
             var cpuNameResult = GetCpuName().Data;
@@ -62,11 +62,29 @@ namespace Business.Concrete
             {
                 CpuCore = cpuCoreResult.CpuCore,
                 CpuName = cpuNameResult.CpuName,
-                CpuUsage = cpuUsageResult.CpuUsage
+                CpuUsage = cpuUsageResult.CpuUsage,
+                UserId = userId,
+                Email = "user@example.com" // Replace with actual user email if needed
             };
 
             _cpuDal.Add(cpuInfo);
-            return new SuccessResult(Messages.SendCpuSql);
+            return new SuccessResult("CPU data sent to SQL");
+        }
+        public void SaveCpuInfo(Cpu cpu)
+        {
+            _cpuDal.Add(cpu);
+        }
+
+        public IResult SetUserIdForCpu(string email, int userId)
+        {
+            var cpuRecords = _cpuDal.GetAll(c => c.Email == email);
+            foreach (var record in cpuRecords)
+            {
+                record.UserId = userId;
+                _cpuDal.Update(record);
+            }
+            return new SuccessResult("User ID set for CPU records.");
         }
     }
+    
 }

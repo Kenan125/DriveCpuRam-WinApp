@@ -11,8 +11,6 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfDriveDal : EfEntityRepositoryBase<Drive, UserPcInfoContext>, IDriveDal
     {
-        public EfDriveDal(UserPcInfoContext context) : base(context)
-        {
-        }
+        
     }
 }

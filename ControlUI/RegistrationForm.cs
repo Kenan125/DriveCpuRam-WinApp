@@ -1,4 +1,6 @@
 ﻿using Business.Concrete;
+using DataAccess.Concrete.EntityFramework;
+using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,14 +17,28 @@ namespace ControlUI
     public partial class RegistrationForm : Form
     {
         private UserManager _userManager;
-        public RegistrationForm(UserManager _userManager, UserManager userManager)
+        public RegistrationForm(UserManager userManager)
         {
             InitializeComponent();
-            this._userManager = userManager;
+            _userManager = userManager;
         }
+
         private void btnRegister_Click(object sender, EventArgs e)
         {
-            User newUser = new User
+            if (txtPassword.Text != txtConfirmPassword.Text)
+            {
+                MessageBox.Show("Passwords do not match!");
+                return;
+            }
+
+            var existingUser = _userManager.GetUserByEmail(txtEmail.Text);
+            if (existingUser.Data != null)
+            {
+                MessageBox.Show("User already exists with this email!");
+                return;
+            }
+
+            var newUser = new User
             {
                 Name = txtName.Text,
                 Surname = txtSurname.Text,
@@ -35,7 +51,7 @@ namespace ControlUI
             if (result.Success)
             {
                 MessageBox.Show(result.Message);
-                LoginForm loginForm = new LoginForm(_userManager);
+                var loginForm = new LoginForm(_userManager);
                 loginForm.Show();
                 this.Hide();
             }
@@ -47,8 +63,8 @@ namespace ControlUI
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            LoginForm loginForm = new LoginForm(_userManager);
-            loginForm.Show();
+            var initialForm = new InitialForm();
+            initialForm.Show();
             this.Hide();
         }
     }

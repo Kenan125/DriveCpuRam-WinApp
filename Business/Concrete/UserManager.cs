@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Core.Utilities;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -28,14 +29,16 @@ namespace Business.Concrete
 
         public IResult AddUser(User user)
         {
+            user.Password = PasswordHasher.HashPassword(user.Password); // Hash the password
             _userDal.Add(user);
-            return new SuccessResult(Messages.UserAdded);
+            return new SuccessResult("User added successfully.");
         }
 
         public IResult UpdateUser(User user)
         {
+            user.Password = PasswordHasher.HashPassword(user.Password); // Hash the password
             _userDal.Update(user);
-            return new SuccessResult(Messages.UserUpdated);
+            return new SuccessResult("User updated successfully.");
         }
 
         public IResult DeleteUser(int userId)
@@ -69,7 +72,8 @@ namespace Business.Concrete
 
         public IResult Login(string email, string password)
         {
-            var user = _userDal.Get(u => u.Email == email && u.Password == password);
+            var hashedPassword = PasswordHasher.HashPassword(password); // Hash the password
+            var user = _userDal.Get(u => u.Email == email && u.Password == hashedPassword);
             if (user == null)
             {
                 return new ErrorResult("Invalid email or password.");
@@ -87,27 +91,27 @@ namespace Business.Concrete
                 return new ErrorResult("User not found.");
             }
 
-            user.Password = newPassword;
+            user.Password = PasswordHasher.HashPassword(newPassword); // Hash the new password
             _userDal.Update(user);
             return new SuccessResult("Password changed successfully.");
         }       
 
         public IDataResult<List<Cpu>> GetUserCpuInfo(int userId)
         {
-            var cpuInfos = _cpuDal.GetAll(c => c.UserId == userId);
-            return new SuccessDataResult<List<Cpu>>(cpuInfos, "CPU info retrieved successfully.");
+            var result = _cpuDal.GetAll(c => c.UserId == userId);
+            return new SuccessDataResult<List<Cpu>>(result);
         }
 
         public IDataResult<List<Drive>> GetUserDriveInfo(int userId)
         {
-            var driveInfos = _driveDal.GetAll(d => d.UserId == userId);
-            return new SuccessDataResult<List<Drive>>(driveInfos, "Drive info retrieved successfully.");
+            var result = _driveDal.GetAll(d => d.UserId == userId);
+            return new SuccessDataResult<List<Drive>>(result);
         }
 
         public IDataResult<List<Ram>> GetUserRamInfo(int userId)
         {
-            var ramInfos = _ramDal.GetAll(r => r.UserId == userId);
-            return new SuccessDataResult<List<Ram>>(ramInfos, "RAM info retrieved successfully.");
+            var result = _ramDal.GetAll(r => r.UserId == userId);
+            return new SuccessDataResult<List<Ram>>(result);
         }
 
         public IResult Logout()
@@ -118,9 +122,28 @@ namespace Business.Concrete
 
         public IResult Register(User user)
         {
+            user.Password = PasswordHasher.HashPassword(user.Password); // Hash the password
             _userDal.Add(user);
             return new SuccessResult("Registration successful.");
         }
-       
+
+        public IDataResult<User> GetUserByEmail(string email)
+        {
+            var user = _userDal.Get(u => u.Email == email);
+            if (user != null)
+            {
+                return new SuccessDataResult<User>(user);
+            }
+            return new ErrorDataResult<User>("User not found.");
+        }
+        public IDataResult<int> GetUserIdByEmail(string email)
+        {
+            var user = _userDal.Get(u => u.Email == email);
+            if (user != null)
+            {
+                return new SuccessDataResult<int>(user.Id, "User ID retrieved successfully.");
+            }
+            return new ErrorDataResult<int>("User not found.");
+        }
     }
 }
