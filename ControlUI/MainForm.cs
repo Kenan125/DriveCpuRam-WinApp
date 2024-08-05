@@ -31,7 +31,7 @@ namespace ControlUI
             _user = user;
 
             _timer = new System.Windows.Forms.Timer();
-            _timer.Interval = 6000; // 60 seconds
+            _timer.Interval = 6000; // 6 seconds
             _timer.Tick += Timer_Tick;
             _timer.Start();
 
