@@ -16,6 +16,17 @@ namespace Business.Constants
         public static string UserDeleted = "User deleted successfully.";
         public static string UserNotFound = "User not found.";
         public static string UserRetrieved = "User retrieved successfully.";
+        public static string UserAllRetrieved = "Users retrieved successfully.";
+        public static string PasswordEmailFail = "Invalid email or password.";
+        public static string LoginSuccess = "Login successful.";
+        public static string PasswordChange = "Password changed successfully.";
+        public static string LogoutSuccess = "Logout successful.";
+        public static string RegistrationSuccess = "Registration successful.";
+        public static string UserIdRetrieved = "User ID retrieved successfully.";
+        public static string LoginError = "An error occurred while trying to log in. Please try again.";
+        public static string UserExist = "User already exists with this email!";
+        public static string PasswordNotMatch = "Passwords do not match!";
+
 
     }
 }

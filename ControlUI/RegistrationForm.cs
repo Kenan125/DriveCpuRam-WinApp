@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using Business.Constants;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using System;
@@ -27,14 +28,14 @@ namespace ControlUI
         {
             if (txtPassword.Text != txtConfirmPassword.Text)
             {
-                MessageBox.Show("Passwords do not match!");
+                MessageBox.Show(Messages.PasswordNotMatch);
                 return;
             }
 
             var existingUser = _userManager.GetUserByEmail(txtEmail.Text);
             if (existingUser.Data != null)
             {
-                MessageBox.Show("User already exists with this email!");
+                MessageBox.Show(Messages.UserExist);
                 return;
             }
 

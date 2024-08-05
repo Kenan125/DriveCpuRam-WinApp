@@ -96,7 +96,7 @@ namespace Business.Concrete
             };
 
             _ramDal.Add(ramInfo);
-            return new SuccessResult("RAM data sent to SQL");
+            return new SuccessResult(Messages.SendRamSql);
         }
         public IDataResult<List<Ram>> GetRamDataByUserId(int userId)
         {

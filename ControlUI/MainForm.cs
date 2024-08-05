@@ -31,7 +31,7 @@ namespace ControlUI
             _user = user;
 
             _timer = new System.Windows.Forms.Timer();
-            _timer.Interval = 60000; // 60 seconds
+            _timer.Interval = 6000; // 60 seconds
             _timer.Tick += Timer_Tick;
             _timer.Start();
 
@@ -44,21 +44,38 @@ namespace ControlUI
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            LoadData();
             SendDataToSqlServer();
+            LoadData();
+
         }
 
         private void LoadData()
         {
-            var cpuData = _cpuManager.GetCpuDataByUserId(_user.Id).Data;
-            var ramData = _ramManager.GetRamDataByUserId(_user.Id).Data;
-            var driveData = _driveManager.GetDriveDataByUserId(_user.Id).Data;
+            var cpuData = _cpuManager.GetCpuDataByUserId(_user.Id).Data.OrderByDescending(c=>c.Id).ToList();
+            var ramData = _ramManager.GetRamDataByUserId(_user.Id).Data.OrderByDescending(c=>c.Id).ToList();
+            var driveData = _driveManager.GetDriveDataByUserId(_user.Id).Data.OrderByDescending(c => c.Id).ToList();
 
             dataGridViewCpu.DataSource = cpuData;
-            dataGridViewRam.DataSource = ramData;
-            dataGridViewDrive.DataSource = driveData;
-        }
+            HideUnwantedColumns(dataGridViewCpu);
 
+            dataGridViewRam.DataSource = ramData;
+            HideUnwantedColumns(dataGridViewRam);
+
+            dataGridViewDrive.DataSource = driveData;
+            HideUnwantedColumns(dataGridViewDrive);
+        }
+        private void HideUnwantedColumns(DataGridView dataGridView)
+        {
+            if (dataGridView.Columns["UserId"] != null)
+            {
+                dataGridView.Columns["UserId"].Visible = false;
+            }
+            if (dataGridView.Columns["Email"] != null)
+            {
+                dataGridView.Columns["Email"].Visible = false;
+                
+            }
+        }
         private void SendDataToSqlServer()
         {
             _cpuManager.SendCpuData(_user.Id, _user.Email);

@@ -61,7 +61,7 @@ namespace Business.Concrete
                 _driveDal.Add(driveInfo);
             }
 
-            return new SuccessResult("Drive data sent to SQL");
+            return new SuccessResult(Messages.SendDriveSql);
         }
 
         public IDataResult<List<Drive>> GetDriveDataByUserId(int userId)

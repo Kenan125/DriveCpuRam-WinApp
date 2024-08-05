@@ -71,7 +71,7 @@ namespace Business.Concrete
             };
 
             _cpuDal.Add(cpuInfo);
-            return new SuccessResult("CPU data sent to SQL");
+            return new SuccessResult(Messages.SendCpuSql);
         }
         public IDataResult<List<Cpu>> GetCpuDataByUserId(int userId)
         {

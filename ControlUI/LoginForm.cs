@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Business.Concrete;
+using Business.Constants;
 using DataAccess.Concrete.EntityFramework;
 namespace ControlUI
 {
@@ -53,7 +54,7 @@ namespace ControlUI
             catch (Exception ex)
             {
                 // Handle or log the exception appropriately
-                MessageBox.Show("An error occurred while trying to log in. Please try again.");
+                MessageBox.Show(Messages.LoginError);
             }
         }
 

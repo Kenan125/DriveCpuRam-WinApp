@@ -31,14 +31,14 @@ namespace Business.Concrete
         {
             user.Password = PasswordHasher.HashPassword(user.Password); // Hash the password
             _userDal.Add(user);
-            return new SuccessResult("User added successfully.");
+            return new SuccessResult(Messages.UserAdded);
         }
 
         public IResult UpdateUser(User user)
         {
             user.Password = PasswordHasher.HashPassword(user.Password); // Hash the password
             _userDal.Update(user);
-            return new SuccessResult("User updated successfully.");
+            return new SuccessResult(Messages.UserUpdated);
         }
 
         public IResult DeleteUser(int userId)
@@ -67,7 +67,7 @@ namespace Business.Concrete
         public IDataResult<List<User>> GetAllUsers()
         {
             var users = _userDal.GetAll();
-            return new SuccessDataResult<List<User>>(users, "Users retrieved successfully.");
+            return new SuccessDataResult<List<User>>(users, Messages.UserAllRetrieved);
         }
 
         public IResult Login(string email, string password)
@@ -76,11 +76,11 @@ namespace Business.Concrete
             var user = _userDal.Get(u => u.Email == email && u.Password == hashedPassword);
             if (user == null)
             {
-                return new ErrorResult("Invalid email or password.");
+                return new ErrorResult(Messages.PasswordEmailFail);
             }
 
             // Add login logic here (e.g., set session)
-            return new SuccessResult("Login successful.");
+            return new SuccessResult(Messages.LoginSuccess);
         }
 
         public IResult ChangePassword(int userId, string newPassword)
@@ -88,12 +88,12 @@ namespace Business.Concrete
             var user = _userDal.Get(u => u.Id == userId);
             if (user == null)
             {
-                return new ErrorResult("User not found.");
+                return new ErrorResult(Messages.UserNotFound);
             }
 
             user.Password = PasswordHasher.HashPassword(newPassword); // Hash the new password
             _userDal.Update(user);
-            return new SuccessResult("Password changed successfully.");
+            return new SuccessResult(Messages.PasswordChange);
         }       
 
         public IDataResult<List<Cpu>> GetUserCpuInfo(int userId)
@@ -117,14 +117,14 @@ namespace Business.Concrete
         public IResult Logout()
         {
             // Add logout logic here (e.g., clear session)
-            return new SuccessResult("Logout successful.");
+            return new SuccessResult(Messages.LogoutSuccess);
         }
 
         public IResult Register(User user)
         {
             user.Password = PasswordHasher.HashPassword(user.Password); // Hash the password
             _userDal.Add(user);
-            return new SuccessResult("Registration successful.");
+            return new SuccessResult(Messages.RegistrationSuccess);
         }
 
         public IDataResult<User> GetUserByEmail(string email)
@@ -134,16 +134,16 @@ namespace Business.Concrete
             {
                 return new SuccessDataResult<User>(user);
             }
-            return new ErrorDataResult<User>("User not found.");
+            return new ErrorDataResult<User>(Messages.UserNotFound);
         }
         public IDataResult<int> GetUserIdByEmail(string email)
         {
             var user = _userDal.Get(u => u.Email == email);
             if (user != null)
             {
-                return new SuccessDataResult<int>(user.Id, "User ID retrieved successfully.");
+                return new SuccessDataResult<int>(user.Id, Messages.UserIdRetrieved);
             }
-            return new ErrorDataResult<int>("User not found.");
+            return new ErrorDataResult<int>(Messages.UserNotFound);
         }
     }
 }
