@@ -39,7 +39,7 @@ namespace ControlUI
             _timer.Start();
             _isPaused = false;
 
-            //dataGridView1.DataError += DataGridView1_DataError; // Subscribe to DataError event
+            
             dataGridViewCpu.DataError += DataGridView_DataError;
             dataGridViewRam.DataError += DataGridView_DataError;
             dataGridViewDrive.DataError += DataGridView_DataError;
