@@ -28,6 +28,13 @@ namespace ControlUI
                 var result = _userManager.Login(txtEmail.Text, txtPassword.Text);
                 if (result.Success)
                 {
+                    if(string.IsNullOrEmpty(txtEmail.Text)||
+                        string.IsNullOrEmpty(txtPassword.Text))
+                    {
+                        MessageBox.Show("Empty spaces should be filled");
+                        return;
+                    }
+
                     var userIdResult = _userManager.GetUserIdByEmail(txtEmail.Text);
                     if (userIdResult.Success)
                     {

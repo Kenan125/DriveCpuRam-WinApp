@@ -26,6 +26,18 @@ namespace ControlUI
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
+            // Check if any textbox is empty
+            if (string.IsNullOrWhiteSpace(txtName.Text) ||
+                string.IsNullOrWhiteSpace(txtSurname.Text) ||
+                string.IsNullOrWhiteSpace(txtPhoneNumber.Text) ||
+                string.IsNullOrWhiteSpace(txtEmail.Text) ||
+                string.IsNullOrWhiteSpace(txtPassword.Text) ||
+                string.IsNullOrWhiteSpace(txtConfirmPassword.Text))
+            {
+                MessageBox.Show("Please fill in all fields.");
+                return;
+            }
+
             if (txtPassword.Text != txtConfirmPassword.Text)
             {
                 MessageBox.Show(Messages.PasswordNotMatch);

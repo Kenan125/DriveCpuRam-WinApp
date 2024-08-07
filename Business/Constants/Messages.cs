@@ -26,6 +26,7 @@ namespace Business.Constants
         public static string LoginError = "An error occurred while trying to log in. Please try again.";
         public static string UserExist = "User already exists with this email!";
         public static string PasswordNotMatch = "Passwords do not match!";
+        public static string GridViewError = "An error occurred while binding data to the DataGridView: ";
 
 
     }

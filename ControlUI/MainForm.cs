@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using Business.Constants;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace ControlUI
         private readonly DriveManager _driveManager;
         private readonly User _user;
         private readonly System.Windows.Forms.Timer _timer;
+        private bool _isPaused;
 
         public MainForm(UserManager userManager, CpuManager cpuManager, RamManager ramManager, DriveManager driveManager, User user)
         {
@@ -34,6 +36,7 @@ namespace ControlUI
             _timer.Interval = 6000; // 6 seconds
             _timer.Tick += Timer_Tick;
             _timer.Start();
+            _isPaused = false;
 
             //dataGridView1.DataError += DataGridView1_DataError; // Subscribe to DataError event
             dataGridViewCpu.DataError += DataGridView_DataError;
@@ -100,8 +103,54 @@ namespace ControlUI
         private void DataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             // Handle the data error here
-            MessageBox.Show("An error occurred while binding data to the DataGridView: " + e.Exception.Message);
+            MessageBox.Show(Messages.GridViewError + e.Exception.Message);
             e.ThrowException = false;
         }
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            var settingsForm = new SettingsForm( _userManager, _user, _isPaused,this);
+            settingsForm.Show();
+            this.Hide();
+        }
+        
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            // Handle logout logic
+            this.Close();
+            Application.Restart(); // Or open the login form again
+        }
+        private void btnPauseResume_Click(object sender, EventArgs e)
+        {
+            TogglePauseResume();
+        }
+        public void TogglePauseResume()
+        {
+            if (_timer.Enabled)
+            {
+                _timer.Stop();
+                btnPauseResume.Text = "Resume";
+                _isPaused = true;
+            }
+            else
+            {
+                _timer.Start();
+                btnPauseResume.Text = "Pause";
+                _isPaused = false;
+            }
+        }
+        public void ResumeIfPaused()
+        {
+            if (_isPaused)
+            {
+                _timer.Stop();
+                btnPauseResume.Text = "Resume";
+            }
+            else
+            {
+                _timer.Start();
+                btnPauseResume.Text = "Pause";
+            }
+        }
+
     }
 }
