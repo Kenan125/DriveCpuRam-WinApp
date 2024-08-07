@@ -14,9 +14,11 @@ namespace Business.Abstract
         IDataResult<Ram> GetAvailableRam();
         IDataResult<Ram> GetUsedRam();
         IDataResult<Ram> GetPercentageRam();
+        IDataResult<Ram> GetRamInfo(int userId, string email);
 
-        
 
-        
+
+
+
     }
 }

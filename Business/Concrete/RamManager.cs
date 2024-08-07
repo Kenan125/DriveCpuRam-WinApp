@@ -80,6 +80,23 @@ namespace Business.Concrete
         }
         public IResult SendRamData(int userId, string email)
         {
+            var ramInfoResult = GetRamInfo(userId, email);
+            if (!ramInfoResult.Success)
+            {
+                return new ErrorResult("Failed to get Ram info");
+            }
+            var result = ramInfoResult.Data;
+            _ramDal.Add(result);
+            return new SuccessResult(Messages.SendRamSql);
+        }
+        public IDataResult<List<Ram>> GetRamDataByUserId(int userId)
+        {
+            var result = _ramDal.GetAll(r => r.UserId == userId);
+            return new SuccessDataResult<List<Ram>>(result);
+        }
+
+        public IDataResult<Ram> GetRamInfo(int userId, string email)
+        {
             var totalRamResult = GetTotalRam().Data;
             var usedRamResult = GetUsedRam().Data;
             var availableRamResult = GetAvailableRam().Data;
@@ -94,15 +111,7 @@ namespace Business.Concrete
                 UserId = userId,
                 Email = email
             };
-
-            _ramDal.Add(ramInfo);
-            return new SuccessResult(Messages.SendRamSql);
+            return new SuccessDataResult<Ram>(ramInfo);
         }
-        public IDataResult<List<Ram>> GetRamDataByUserId(int userId)
-        {
-            var result = _ramDal.GetAll(r => r.UserId == userId);
-            return new SuccessDataResult<List<Ram>>(result);
-        }
-
     }
 }

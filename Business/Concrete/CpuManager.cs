@@ -57,10 +57,29 @@ namespace Business.Concrete
 
         public IResult SendCpuData(int userId, string email)
         {
+            var cpuInfoResult = GetCpuInfo(userId, email);
+
+            if (!cpuInfoResult.Success)
+            {
+                return new ErrorResult("Failed to get CPU info");
+            }
+
+            var cpuInfo = cpuInfoResult.Data;
+            _cpuDal.Add(cpuInfo);
+
+            return new SuccessResult(Messages.SendCpuSql);
+        }
+        public IDataResult<List<Cpu>> GetCpuDataByUserId(int userId)
+        {
+            var result = _cpuDal.GetAll(c => c.UserId == userId);
+            return new SuccessDataResult<List<Cpu>>(result);
+        }
+
+        public IDataResult<Cpu> GetCpuInfo(int userId, string email)
+        {
             var cpuCoreResult = GetCpuCore().Data.CpuCore;
             var cpuNameResult = GetCpuName().Data.CpuName;
             var cpuUsageResult = GetCpuUsage().Data.CpuUsage;
-
             var cpuInfo = new Cpu
             {
                 CpuCore = cpuCoreResult,
@@ -70,13 +89,7 @@ namespace Business.Concrete
                 Email = email
             };
 
-            _cpuDal.Add(cpuInfo);
-            return new SuccessResult(Messages.SendCpuSql);
-        }
-        public IDataResult<List<Cpu>> GetCpuDataByUserId(int userId)
-        {
-            var result = _cpuDal.GetAll(c => c.UserId == userId);
-            return new SuccessDataResult<List<Cpu>>(result);
+            return new SuccessDataResult<Cpu>(cpuInfo);
         }
     }
 }

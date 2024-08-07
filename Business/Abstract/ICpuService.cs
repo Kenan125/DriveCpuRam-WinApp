@@ -13,6 +13,7 @@ namespace Business.Abstract
         IDataResult<Cpu> GetCpuName();
         IDataResult<Cpu> GetCpuCore();
         IDataResult<Cpu> GetCpuUsage();
+        IDataResult<Cpu> GetCpuInfo(int userId, string email);
 
         
         
