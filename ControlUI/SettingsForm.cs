@@ -1,4 +1,5 @@
-﻿using Business.Concrete;
+﻿using Business.Abstract;
+using Business.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using System;
@@ -16,13 +17,13 @@ namespace ControlUI
     public partial class SettingsForm : Form
     {
         private readonly MainForm _mainForm;
-        private readonly UserManager _userManager;
+        private readonly IUserService _userService;
         private readonly User _user;
         private readonly bool _isPaused;
-        public SettingsForm(UserManager userManager, User user, bool isPaused, MainForm mainForm)
+        public SettingsForm(IUserService userService, User user, bool isPaused, MainForm mainForm)
         {
             InitializeComponent();
-            _userManager = userManager;
+            _userService = userService;
             _user = user;
             _isPaused = isPaused;
             _mainForm = mainForm;
@@ -83,7 +84,7 @@ namespace ControlUI
             }
 
             updateAction(_user);
-            var result = _userManager.UpdateUser(_user);
+            var result = _userService.UpdateUser(_user);
             MessageBox.Show(result.Message);
         }
         private void btnBack_Click(object sender, EventArgs e)

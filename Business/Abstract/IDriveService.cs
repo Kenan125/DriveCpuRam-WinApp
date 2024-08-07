@@ -12,6 +12,7 @@ namespace Business.Abstract
     {
         IDataResult<List<Drive>> GetDrives();
         IResult SendDriveData(int userId, string email);
+        IDataResult<List<Drive>> GetDriveDataByUserId(int userId);
 
 
     }

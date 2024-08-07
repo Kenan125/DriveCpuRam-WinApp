@@ -50,10 +50,7 @@ namespace Business.Concrete
             return new SuccessDataResult<Cpu>(result);
         }
 
-        public void SaveCpuInfo(Cpu cpu)
-        {
-            _cpuDal.Add(cpu);
-        }
+        
 
         public IResult SendCpuData(int userId, string email)
         {

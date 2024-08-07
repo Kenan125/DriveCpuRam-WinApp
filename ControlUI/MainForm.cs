@@ -1,4 +1,5 @@
-﻿using Business.Concrete;
+﻿using Business.Abstract;
+using Business.Concrete;
 using Business.Constants;
 using Entities.Concrete;
 using System;
@@ -15,21 +16,21 @@ namespace ControlUI
 {
     public partial class MainForm : Form
     {
-        private readonly UserManager _userManager;
-        private readonly CpuManager _cpuManager;
-        private readonly RamManager _ramManager;
-        private readonly DriveManager _driveManager;
+        private readonly IUserService _userService;        
+        private readonly ICpuService _cpuService;
+        private readonly IRamService _ramService;
+        private readonly IDriveService _driveService;
         private readonly User _user;
         private readonly System.Windows.Forms.Timer _timer;
         private bool _isPaused;
 
-        public MainForm(UserManager userManager, CpuManager cpuManager, RamManager ramManager, DriveManager driveManager, User user)
+        public MainForm(IUserService userService, ICpuService cpuService, IRamService ramService, IDriveService driveService, User user)
         {
             InitializeComponent();
-            _userManager = userManager;
-            _cpuManager = cpuManager;
-            _ramManager = ramManager;
-            _driveManager = driveManager;
+            _userService = userService;
+            _cpuService = cpuService;
+            _ramService = ramService;
+            _driveService = driveService;
             _user = user;
 
             _timer = new System.Windows.Forms.Timer();
@@ -43,6 +44,7 @@ namespace ControlUI
             dataGridViewRam.DataError += DataGridView_DataError;
             dataGridViewDrive.DataError += DataGridView_DataError;
             LoadData();
+            
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -54,9 +56,9 @@ namespace ControlUI
 
         private void LoadData()
         {
-            var cpuData = _cpuManager.GetCpuDataByUserId(_user.Id).Data.OrderByDescending(c=>c.Id).ToList();
-            var ramData = _ramManager.GetRamDataByUserId(_user.Id).Data.OrderByDescending(c=>c.Id).ToList();
-            var driveData = _driveManager.GetDriveDataByUserId(_user.Id).Data.OrderByDescending(c => c.Id).ToList();
+            var cpuData = _cpuService.GetCpuDataByUserId(_user.Id).Data.OrderByDescending(c=>c.Id).ToList();
+            var ramData = _ramService.GetRamDataByUserId(_user.Id).Data.OrderByDescending(c=>c.Id).ToList();
+            var driveData = _driveService.GetDriveDataByUserId(_user.Id).Data.OrderByDescending(c => c.Id).ToList();
 
             dataGridViewCpu.DataSource = cpuData;
             HideUnwantedColumns(dataGridViewCpu);
@@ -81,9 +83,9 @@ namespace ControlUI
         }
         private void SendDataToSqlServer()
         {
-            _cpuManager.SendCpuData(_user.Id, _user.Email);
-            _ramManager.SendRamData(_user.Id, _user.Email);
-            _driveManager.SendDriveData(_user.Id, _user.Email);
+            _cpuService.SendCpuData(_user.Id, _user.Email);
+            _ramService.SendRamData(_user.Id, _user.Email);
+            _driveService.SendDriveData(_user.Id, _user.Email);
         }
 
         private void btnSendEmail_Click(object sender, EventArgs e)
@@ -108,7 +110,7 @@ namespace ControlUI
         }
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            var settingsForm = new SettingsForm( _userManager, _user, _isPaused,this);
+            var settingsForm = new SettingsForm( _userService, _user, _isPaused,this);
             settingsForm.Show();
             this.Hide();
         }

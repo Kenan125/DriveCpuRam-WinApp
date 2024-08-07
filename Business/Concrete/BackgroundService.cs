@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Concrete;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
-    public class BackgroundService
+    public class BackgroundService: IHostedService, IDisposable
     {
         private readonly UserManager _userManager;
         private readonly CpuManager _cpuManager;
@@ -54,6 +55,10 @@ namespace Business.Concrete
         {
             _timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
+        }
+        public void Dispose()
+        {
+            _timer?.Dispose();
         }
     }
 }

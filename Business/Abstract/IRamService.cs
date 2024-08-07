@@ -15,7 +15,8 @@ namespace Business.Abstract
         IDataResult<Ram> GetUsedRam();
         IDataResult<Ram> GetPercentageRam();
         IDataResult<Ram> GetRamInfo(int userId, string email);
-
+        IResult SendRamData(int userId, string email);
+        IDataResult<List<Ram>> GetRamDataByUserId(int userId);
 
 
 
