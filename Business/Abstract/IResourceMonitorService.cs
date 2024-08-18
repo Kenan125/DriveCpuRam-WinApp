@@ -8,5 +8,10 @@ namespace Business.Abstract
 {
     public interface IResourceMonitorService
     {
+        void StartMonitoring();
+        void StopMonitoring();
+        double CpuWarningThreshold { get; set; }
+        double RamWarningThreshold { get; set; }
+        double DriveWarningThreshold { get; set; }
     }
 }

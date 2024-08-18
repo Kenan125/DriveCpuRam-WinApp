@@ -46,7 +46,7 @@ namespace ControlUI
                     services.AddSingleton<IUserService, UserManager>();
                     services.AddSingleton<InitialForm>();
 
-                    //services.AddHostedService<Business.Concrete.BackgroundService>();
+                    
                 });
     }
 }

@@ -110,19 +110,7 @@ namespace ControlUI
                 _isPaused = false;
             }
         }
-        /*public void ResumeIfPaused()
-        {
-            if (_isPaused)
-            {
-                _timer.Stop();
-                btnPauseResume.Text = "Resume";
-            }
-            else
-            {
-                _timer.Start();
-                btnPauseResume.Text = "Pause";
-            }
-        }*/
+        
         private void InitializeDataGridViewEvents()
         {
             dataGridViewCpu.DataError += DataGridView_DataError;
