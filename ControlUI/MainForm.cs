@@ -17,7 +17,8 @@ namespace ControlUI
         private readonly User _user;
         private readonly System.Windows.Forms.Timer _timer;
         private bool _isPaused;
-
+        // Add the ResourceMonitorService field
+        private readonly ResourceMonitorService _resourceMonitorService;
         public MainForm(IUserService userService, ICpuService cpuService, IRamService ramService, IDriveService driveService, User user)
         {
             InitializeComponent();
@@ -37,7 +38,12 @@ namespace ControlUI
             _timer.Start();
             _isPaused = false;
 
+            // Initialize the ResourceMonitorService
+            _resourceMonitorService = new ResourceMonitorService();
+            _resourceMonitorService.StartMonitoring();
 
+            // Wire up the FormClosing event
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             InitializeDataGridViewEvents();
             LoadData();
 
@@ -117,6 +123,10 @@ namespace ControlUI
             dataGridViewRam.DataError += DataGridView_DataError;
             dataGridViewDrive.DataError += DataGridView_DataError;
         }
-
+        // Add the FormClosing event handler to stop monitoring
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _resourceMonitorService.StopMonitoring();
+        }
     }
 }

@@ -9,15 +9,15 @@ namespace Business.Concrete
 {
     public class ResourceMonitorService : IResourceMonitorService
     {
-        public double CpuWarningThreshold { get; set; } = 90.0;
-        public double RamWarningThreshold { get; set; } = 90.0;
-        public double DriveWarningThreshold { get; set; } = 90.0;
+        public double CpuWarningThreshold { get; set; } = 10.0;
+        public double RamWarningThreshold { get; set; } = 10.0;
+        public double DriveWarningThreshold { get; set; } = 20.0;
 
         private System.Threading.Timer _monitoringTimer;
 
         public void StartMonitoring()
         {
-            _monitoringTimer = new System.Threading.Timer(MonitorResources, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+            _monitoringTimer = new System.Threading.Timer(MonitorResources, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
         }
 
         public void StopMonitoring()
@@ -70,8 +70,24 @@ namespace Business.Concrete
         }
         private void LogWarning(string message)
         {
-            // Placeholder for logging or notifying about the warning
-            Console.WriteLine(message); // You can replace this with actual logging or UI updates
+            string logFilePath = "ResourceMonitorLog.txt"; // You can specify a different path if needed
+
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(logFilePath, true))
+                {
+                    writer.WriteLine($"{DateTime.Now}: {message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception to a file instead of showing a MessageBox
+                string errorLogFilePath = "ResourceMonitorErrorLog.txt";
+                using (StreamWriter writer = new StreamWriter(errorLogFilePath, true))
+                {
+                    writer.WriteLine($"{DateTime.Now}: Failed to write to log file. Error: {ex.Message}");
+                }
+            }
         }
     }
 }
