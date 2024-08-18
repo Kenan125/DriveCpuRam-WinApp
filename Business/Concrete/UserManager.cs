@@ -4,11 +4,6 @@ using Core.Utilities;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
@@ -61,7 +56,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<User>(Messages.UserNotFound);
             }
 
-            return new SuccessDataResult<User>(user, Messages.UserRetrieved );
+            return new SuccessDataResult<User>(user, Messages.UserRetrieved);
         }
 
         public IDataResult<List<User>> GetAllUsers()
@@ -94,7 +89,7 @@ namespace Business.Concrete
             user.Password = PasswordHasher.HashPassword(newPassword); // Hash the new password
             _userDal.Update(user);
             return new SuccessResult(Messages.PasswordChange);
-        }       
+        }
 
         public IDataResult<List<Cpu>> GetUserCpuInfo(int userId)
         {

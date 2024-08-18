@@ -1,9 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Business.Abstract;
 using Business.Concrete;
-using System;
-using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace ControlUI
 {
@@ -48,7 +46,7 @@ namespace ControlUI
                     services.AddSingleton<IUserService, UserManager>();
                     services.AddSingleton<InitialForm>();
 
-                    services.AddHostedService<Business.Concrete.BackgroundService>();
+                    //services.AddHostedService<Business.Concrete.BackgroundService>();
                 });
     }
 }

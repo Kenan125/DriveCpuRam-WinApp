@@ -3,15 +3,10 @@ using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
-    public class DriveManager:IDriveService
+    public class DriveManager : IDriveService
     {
         IDriveDal _driveDal;
 
@@ -31,7 +26,7 @@ namespace Business.Concrete
                 {
                     string driveName = drive.Name.TrimEnd('\\');
                     decimal totalSpace = (decimal)(drive.TotalSize / 1024.00 / 1024.00 / 1024); // Convert to GB
-                    decimal availableSpace = (decimal)(drive.AvailableFreeSpace/ 1024.0 / 1024 / 1024); // Convert to GB
+                    decimal availableSpace = (decimal)(drive.AvailableFreeSpace / 1024.0 / 1024 / 1024); // Convert to GB
                     decimal usedSpace = totalSpace - availableSpace;
                     decimal percentage = usedSpace / totalSpace * 100;
 

@@ -1,27 +1,18 @@
-﻿using Business.Concrete;
+﻿using Business.Abstract;
+using Business.Concrete;
 using Business.Constants;
-using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace ControlUI
 {
     public partial class RegistrationForm : Form
     {
-        private UserManager _userManager;
-        public RegistrationForm(UserManager userManager)
+        private IUserService _userService;
+        IServiceFactory serviceFactory = new ServiceFactory();
+        public RegistrationForm(IUserService userService)
         {
             InitializeComponent();
-            _userManager = userManager;
+            _userService = userService;
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
@@ -44,7 +35,7 @@ namespace ControlUI
                 return;
             }
 
-            var existingUser = _userManager.GetUserByEmail(txtEmail.Text);
+            var existingUser = _userService.GetUserByEmail(txtEmail.Text);
             if (existingUser.Data != null)
             {
                 MessageBox.Show(Messages.UserExist);
@@ -60,11 +51,11 @@ namespace ControlUI
                 Password = txtPassword.Text
             };
 
-            var result = _userManager.Register(newUser);
+            var result = _userService.Register(newUser);
             if (result.Success)
             {
                 MessageBox.Show(result.Message);
-                var loginForm = new LoginForm(_userManager);
+                var loginForm = new LoginForm(_userService,serviceFactory);
                 loginForm.Show();
                 this.Hide();
             }

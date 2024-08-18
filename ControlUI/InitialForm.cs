@@ -1,4 +1,5 @@
-﻿using Business.Concrete;
+﻿using Business.Abstract;
+using Business.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,8 @@ namespace ControlUI
         private void btnLogin_Click(object sender, EventArgs e)
         {
             var userManager = new UserManager(new EfUserDal(), new EfCpuDal(), new EfDriveDal(), new EfRamDal());
-            LoginForm loginForm = new LoginForm(userManager);
+            IServiceFactory serviceFactory = new ServiceFactory();
+            LoginForm loginForm = new LoginForm(userManager,serviceFactory);
             loginForm.Show();
             this.Hide();
         }

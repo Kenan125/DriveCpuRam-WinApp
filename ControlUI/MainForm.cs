@@ -1,22 +1,16 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
 using Business.Constants;
+using Core.Utilities;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace ControlUI
 {
     public partial class MainForm : Form
     {
-        private readonly IUserService _userService;        
+        private readonly IUserService _userService;
+        private readonly DataService _dataService;
+        private readonly EmailService _emailService;
         private readonly ICpuService _cpuService;
         private readonly IRamService _ramService;
         private readonly IDriveService _driveService;
@@ -28,65 +22,41 @@ namespace ControlUI
         {
             InitializeComponent();
             _userService = userService;
+            _dataService = new DataService(cpuService, ramService, driveService);
+            _emailService = new EmailService();
             _cpuService = cpuService;
             _ramService = ramService;
             _driveService = driveService;
             _user = user;
 
-            _timer = new System.Windows.Forms.Timer();
-            _timer.Interval = 6000; // 6 seconds
+            _timer = new System.Windows.Forms.Timer
+            {
+                Interval = 6000 // 6 seconds
+            };
             _timer.Tick += Timer_Tick;
             _timer.Start();
             _isPaused = false;
 
-            
-            dataGridViewCpu.DataError += DataGridView_DataError;
-            dataGridViewRam.DataError += DataGridView_DataError;
-            dataGridViewDrive.DataError += DataGridView_DataError;
+
+            InitializeDataGridViewEvents();
             LoadData();
-            
+
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            SendDataToSqlServer();
+            _dataService.SendDataToSqlServer(_user.Id, _user.Email);
             LoadData();
 
         }
 
         private void LoadData()
         {
-            var cpuData = _cpuService.GetCpuDataByUserId(_user.Id).Data.OrderByDescending(c=>c.Id).ToList();
-            var ramData = _ramService.GetRamDataByUserId(_user.Id).Data.OrderByDescending(c=>c.Id).ToList();
-            var driveData = _driveService.GetDriveDataByUserId(_user.Id).Data.OrderByDescending(c => c.Id).ToList();
-
-            dataGridViewCpu.DataSource = cpuData;
-            HideUnwantedColumns(dataGridViewCpu);
-
-            dataGridViewRam.DataSource = ramData;
-            HideUnwantedColumns(dataGridViewRam);
-
-            dataGridViewDrive.DataSource = driveData;
-            HideUnwantedColumns(dataGridViewDrive);
+            DataGridViewHelper.LoadDataGrid(dataGridViewCpu, _cpuService.GetCpuDataByUserId(_user.Id).Data);
+            DataGridViewHelper.LoadDataGrid(dataGridViewRam, _ramService.GetRamDataByUserId(_user.Id).Data);
+            DataGridViewHelper.LoadDataGrid(dataGridViewDrive, _driveService.GetDriveDataByUserId(_user.Id).Data);
         }
-        private void HideUnwantedColumns(DataGridView dataGridView)
-        {
-            if (dataGridView.Columns["UserId"] != null)
-            {
-                dataGridView.Columns["UserId"].Visible = false;
-            }
-            if (dataGridView.Columns["Email"] != null)
-            {
-                dataGridView.Columns["Email"].Visible = false;
-                
-            }
-        }
-        private void SendDataToSqlServer()
-        {
-            _cpuService.SendCpuData(_user.Id, _user.Email);
-            _ramService.SendRamData(_user.Id, _user.Email);
-            _driveService.SendDriveData(_user.Id, _user.Email);
-        }
+
 
         private void btnSendEmail_Click(object sender, EventArgs e)
         {
@@ -110,11 +80,11 @@ namespace ControlUI
         }
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            var settingsForm = new SettingsForm( _userService, _user, _isPaused,this);
+            var settingsForm = new SettingsForm(_userService, _user, _isPaused, this);
             settingsForm.Show();
             this.Hide();
         }
-        
+
         private void btnLogout_Click(object sender, EventArgs e)
         {
             // Handle logout logic
@@ -140,7 +110,7 @@ namespace ControlUI
                 _isPaused = false;
             }
         }
-        public void ResumeIfPaused()
+        /*public void ResumeIfPaused()
         {
             if (_isPaused)
             {
@@ -152,6 +122,12 @@ namespace ControlUI
                 _timer.Start();
                 btnPauseResume.Text = "Pause";
             }
+        }*/
+        private void InitializeDataGridViewEvents()
+        {
+            dataGridViewCpu.DataError += DataGridView_DataError;
+            dataGridViewRam.DataError += DataGridView_DataError;
+            dataGridViewDrive.DataError += DataGridView_DataError;
         }
 
     }

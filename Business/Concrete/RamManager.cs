@@ -1,15 +1,10 @@
 ﻿using Business.Abstract;
+using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management;
-using System.Text;
-using System.Threading.Tasks;
-using Business.Constants;
 using System.Diagnostics;
+using System.Management;
 
 namespace Business.Concrete
 {
@@ -31,7 +26,7 @@ namespace Business.Concrete
             var formattedAvailableRam = Math.Round(FormattedBytes.Format((decimal)availableRam), 2);
             var result = new Ram { RamAvailable = formattedAvailableRam };
 
-            return new SuccessDataResult<Ram>(result); 
+            return new SuccessDataResult<Ram>(result);
         }
 
         public IDataResult<Ram> GetPercentageRam()
@@ -58,7 +53,7 @@ namespace Business.Concrete
             {
                 totalRam += (decimal)Convert.ToDouble(obj["Capacity"]);
             }
-            var formattedTotalRam =  Math.Round(FormattedBytes.Format(totalRam), 2);
+            var formattedTotalRam = Math.Round(FormattedBytes.Format(totalRam), 2);
             var result = new Ram { RamTotal = formattedTotalRam };
             return new SuccessDataResult<Ram>(result);
         }

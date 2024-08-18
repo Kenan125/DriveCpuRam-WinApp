@@ -1,17 +1,12 @@
 ﻿using Business.Abstract;
 using Entities.Concrete;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
-    public class BackgroundService: IHostedService, IDisposable
+    public class BackgroundService //: IHostedService, IDisposable
     {
-        private readonly UserManager _userManager;
+        /*private readonly UserManager _userManager;
         private readonly CpuManager _cpuManager;
         private readonly RamManager _ramManager;
         private readonly DriveManager _driveManager;
@@ -59,6 +54,6 @@ namespace Business.Concrete
         public void Dispose()
         {
             _timer?.Dispose();
-        }
+        }*/
     }
 }
